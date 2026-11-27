@@ -681,3 +681,8 @@ button:disabled {
 .search-results button:hover {
     background: #EDF2F7;
 }
+
+/* 모바일 검색창 자동 확대 방지 */
+#cityInput {
+    font-size: 16px;
+}
