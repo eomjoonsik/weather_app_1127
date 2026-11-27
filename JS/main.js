@@ -584,349 +584,448 @@ function getLocation() {
 
 // 지역명 검색 별칭
 
-const aliases = {
 
-    "서울": "Seoul",
-    "서울특별시": "Seoul",
+// 주요 도시 및 유명 지역 목록
+const cityList = [
+    ["서울", "대한민국", 37.5665, 126.9780],
+    ["인천", "대한민국", 37.4563, 126.7052],
+    ["부산", "대한민국", 35.1796, 129.0756],
+    ["대구", "대한민국", 35.8714, 128.6014],
+    ["대전", "대한민국", 36.3504, 127.3845],
+    ["광주", "대한민국", 35.1595, 126.8526],
+    ["울산", "대한민국", 35.5384, 129.3114],
+    ["세종", "대한민국", 36.4800, 127.2890],
+    ["제주", "제주특별자치도", 33.4996, 126.5312],
+    ["서귀포", "제주특별자치도", 33.2541, 126.5600],
 
-    "인천": "Incheon",
-    "인천광역시": "Incheon",
+    ["송도", "인천 연수구", 37.3826, 126.6560],
+    ["청라", "인천 서구", 37.5320, 126.6440],
+    ["부평", "인천 부평구", 37.5070, 126.7218],
+    ["구월동", "인천 남동구", 37.4490, 126.7070],
+    ["영종도", "인천 중구", 37.4900, 126.5200],
+    ["강화도", "인천 강화군", 37.7460, 126.4880],
 
-    "부산": "Busan",
-    "부산광역시": "Busan",
+    ["강남", "서울 강남구", 37.4979, 127.0276],
+    ["홍대", "서울 마포구", 37.5572, 126.9245],
+    ["성수", "서울 성동구", 37.5445, 127.0560],
+    ["잠실", "서울 송파구", 37.5133, 127.1000],
+    ["신도림", "서울 구로구", 37.5088, 126.8912],
+    ["여의도", "서울 영등포구", 37.5219, 126.9245],
+    ["명동", "서울 중구", 37.5636, 126.9850],
+    ["이태원", "서울 용산구", 37.5345, 126.9946],
+    ["해운대", "부산 해운대구", 35.1631, 129.1635],
+    ["광안리", "부산 수영구", 35.1532, 129.1187],
 
-    "대구": "Daegu",
-    "대구광역시": "Daegu",
+    ["수원", "경기도", 37.2636, 127.0286],
+    ["성남", "경기도", 37.4200, 127.1265],
+    ["고양", "경기도", 37.6584, 126.8320],
+    ["용인", "경기도", 37.2411, 127.1776],
+    ["부천", "경기도", 37.5034, 126.7660],
+    ["안양", "경기도", 37.3943, 126.9568],
+    ["안산", "경기도", 37.3219, 126.8309],
+    ["김포", "경기도", 37.6153, 126.7156],
+    ["파주", "경기도", 37.7600, 126.7800],
+    ["화성", "경기도", 37.1995, 126.8312],
+    ["평택", "경기도", 36.9921, 127.1129],
+    ["시흥", "경기도", 37.3800, 126.8029],
+    ["남양주", "경기도", 37.6360, 127.2165],
+    ["의정부", "경기도", 37.7381, 127.0337],
+    ["하남", "경기도", 37.5393, 127.2148],
+    ["광주", "경기도", 37.4294, 127.2550],
+    ["이천", "경기도", 37.2720, 127.4350],
+    ["양주", "경기도", 37.7853, 127.0458],
+    ["동두천", "경기도", 37.9034, 127.0605],
+    ["과천", "경기도", 37.4292, 126.9876],
+    ["군포", "경기도", 37.3616, 126.9352],
+    ["의왕", "경기도", 37.3447, 126.9683],
 
-    "대전": "Daejeon",
-    "대전광역시": "Daejeon",
+    ["춘천", "강원특별자치도", 37.8813, 127.7298],
+    ["강릉", "강원특별자치도", 37.7519, 128.8761],
+    ["원주", "강원특별자치도", 37.3422, 127.9202],
+    ["속초", "강원특별자치도", 38.2070, 128.5918],
+    ["동해", "강원특별자치도", 37.5247, 129.1143],
 
-    "광주": "Gwangju",
-    "광주광역시": "Gwangju",
+    ["청주", "충청북도", 36.6424, 127.4890],
+    ["충주", "충청북도", 36.9910, 127.9259],
+    ["제천", "충청북도", 37.1326, 128.1909],
+    ["천안", "충청남도", 36.8151, 127.1139],
+    ["아산", "충청남도", 36.7898, 127.0018],
+    ["논산", "충청남도", 36.1872, 127.0987],
+    ["공주", "충청남도", 36.4465, 127.1190],
+    ["서산", "충청남도", 36.7849, 126.4503],
 
-    "울산": "Ulsan",
-    "울산광역시": "Ulsan",
+    ["전주", "전북특별자치도", 35.8242, 127.1480],
+    ["군산", "전북특별자치도", 35.9677, 126.7369],
+    ["익산", "전북특별자치도", 35.9483, 126.9576],
+    ["목포", "전라남도", 34.8118, 126.3922],
+    ["여수", "전라남도", 34.7604, 127.6622],
+    ["순천", "전라남도", 34.9506, 127.4872],
+    ["나주", "전라남도", 35.0158, 126.7108],
 
-    "세종": "Sejong",
-    "제주": "Jeju",
-    "제주시": "Jeju",
+    ["포항", "경상북도", 36.0190, 129.3435],
+    ["경주", "경상북도", 35.8562, 129.2247],
+    ["구미", "경상북도", 36.1195, 128.3446],
+    ["안동", "경상북도", 36.5684, 128.7294],
+    ["창원", "경상남도", 35.2280, 128.6811],
+    ["김해", "경상남도", 35.2285, 128.8894],
+    ["진주", "경상남도", 35.1799, 128.1076],
+    ["거제", "경상남도", 34.8806, 128.6211],
+    ["통영", "경상남도", 34.8544, 128.4332],
+    ["양산", "경상남도", 35.3350, 129.0370],
 
-    "수원": "Suwon",
-    "성남": "Seongnam",
-    "고양": "Goyang",
-    "용인": "Yongin",
-    "부천": "Bucheon",
-    "안양": "Anyang",
-    "안산": "Ansan",
-    "김포": "Gimpo",
-    "파주": "Paju",
-    "화성": "Hwaseong",
-    "평택": "Pyeongtaek",
-    "시흥": "Siheung",
-    "청주": "Cheongju",
-    "천안": "Cheonan",
-    "전주": "Jeonju",
-    "목포": "Mokpo",
-    "여수": "Yeosu",
-    "순천": "Suncheon",
-    "포항": "Pohang",
-    "경주": "Gyeongju",
-    "창원": "Changwon",
-    "김해": "Gimhae",
-    "춘천": "Chuncheon",
-    "강릉": "Gangneung",
-    "원주": "Wonju",
-    "속초": "Sokcho",
+    // 해외 주요 도시
+    ["뉴욕", "미국", 40.7128, -74.0060],
+    ["로스앤젤레스", "미국", 34.0522, -118.2437],
+    ["샌프란시스코", "미국", 37.7749, -122.4194],
+    ["시카고", "미국", 41.8781, -87.6298],
+    ["라스베이거스", "미국", 36.1699, -115.1398],
+    ["하와이 호놀룰루", "미국", 21.3069, -157.8583],
 
-    "도쿄": "Tokyo",
-    "오사카": "Osaka",
-    "후쿠오카": "Fukuoka",
-    "삿포로": "Sapporo",
-    "교토": "Kyoto",
-    "뉴욕": "New York",
-    "런던": "London",
-    "파리": "Paris",
-    "로스앤젤레스": "Los Angeles",
-    "방콕": "Bangkok",
-    "타이베이": "Taipei",
-    "싱가포르": "Singapore",
-    "홍콩": "Hong Kong",
-    "베이징": "Beijing",
-    "상하이": "Shanghai",
-    "시드니": "Sydney",
-    "로마": "Rome",
-    "베를린": "Berlin"
-};
+    ["도쿄", "일본", 35.6762, 139.6503],
+    ["오사카", "일본", 34.6937, 135.5023],
+    ["후쿠오카", "일본", 33.5902, 130.4017],
+    ["삿포로", "일본", 43.0618, 141.3545],
+    ["나고야", "일본", 35.1815, 136.9066],
+    ["교토", "일본", 35.0116, 135.7681],
+    ["오키나와 나하", "일본", 26.2124, 127.6809],
 
-// 국내 주요 광역시 검색 조건
+    ["베이징", "중국", 39.9042, 116.4074],
+    ["상하이", "중국", 31.2304, 121.4737],
+    ["칭다오", "중국", 36.0671, 120.3826],
+    ["홍콩", "홍콩", 22.3193, 114.1694],
+    ["타이베이", "대만", 25.0330, 121.5654],
 
-const metroAreas = {
+    ["방콕", "태국", 13.7563, 100.5018],
+    ["치앙마이", "태국", 18.7883, 98.9853],
+    ["다낭", "베트남", 16.0544, 108.2022],
+    ["하노이", "베트남", 21.0278, 105.8342],
+    ["호찌민", "베트남", 10.8231, 106.6297],
+    ["싱가포르", "싱가포르", 1.3521, 103.8198],
+    ["쿠알라룸푸르", "말레이시아", 3.1390, 101.6869],
+    ["마닐라", "필리핀", 14.5995, 120.9842],
+    ["뉴델리", "인도", 28.6139, 77.2090],
+    ["두바이", "아랍에미리트", 25.2048, 55.2708],
 
-    "서울": "서울",
-    "서울특별시": "서울",
+    ["런던", "영국", 51.5074, -0.1278],
+    ["파리", "프랑스", 48.8566, 2.3522],
+    ["로마", "이탈리아", 41.9028, 12.4964],
+    ["밀라노", "이탈리아", 45.4642, 9.1900],
+    ["베를린", "독일", 52.5200, 13.4050],
+    ["마드리드", "스페인", 40.4168, -3.7038],
+    ["바르셀로나", "스페인", 41.3851, 2.1734],
+    ["암스테르담", "네덜란드", 52.3676, 4.9041],
+    ["프라하", "체코", 50.0755, 14.4378],
+    ["빈", "오스트리아", 48.2082, 16.3738],
+    ["시드니", "호주", -33.8688, 151.2093],
+    ["멜버른", "호주", -37.8136, 144.9631],
+    ["토론토", "캐나다", 43.6532, -79.3832],
+    ["밴쿠버", "캐나다", 49.2827, -123.1207]
+];
 
-    "인천": "인천",
-    "인천광역시": "인천",
+// 초성 검색 기능
 
-    "부산": "부산",
-    "부산광역시": "부산",
+const consonants = [
+    "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ",
+    "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ",
+    "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ",
+    "ㅋ", "ㅌ", "ㅍ", "ㅎ"
+];
 
-    "대구": "대구",
-    "대구광역시": "대구",
+function getInitial(text) {
 
-    "대전": "대전",
-    "대전광역시": "대전",
+    return [...text].map(char => {
 
-    "광주광역시": "광주",
+        const code = char.charCodeAt(0) - 44032;
 
-    "울산": "울산",
-    "울산광역시": "울산"
-};
+        if (code >= 0 && code <= 11171) {
 
-// 검색 지역 선택
+            return consonants[Math.floor(code / 588)];
+        }
+
+        return char;
+
+    }).join("");
+}
+
+// 검색어 일치 여부
+
+function matchesCity(name, keyword) {
+
+    name = name.replace(/\s/g, "").toLowerCase();
+    keyword = keyword.replace(/\s/g, "").toLowerCase();
+
+    if (name.includes(keyword)) return true;
+
+    const chars = [...keyword];
+
+    return [...name].some((_, start) => {
+
+        return chars.every((char, i) => {
+
+            const target = name[start + i];
+
+            if (!target) return false;
+
+            if (consonants.includes(char)) {
+                return getInitial(target) === char;
+            }
+
+            return target === char;
+        });
+    });
+}
+
+// 검색 타이머
+
+let searchTimer;
+let currentSuggestions = [];
+
+// 검색 결과 선택
 
 function selectPlace(place) {
+
+    clearTimeout(searchTimer);
 
     searchId++;
 
     searchResults.hidden = true;
 
-    cityInput.value = place.name;
+    cityInput.value = place[0];
 
-    const label = [
-        place.name,
-        place.admin1,
-        place.country
-    ].filter(Boolean);
-
-    const cityName = [...new Set(label)].join(", ");
+    currentSuggestions = [];
 
     getWeather(
-        place.latitude,
-        place.longitude,
-        cityName
+        place[2],
+        place[3],
+        place[0] + ", " + place[1]
     );
 }
 
-// 지역 검색 기능
+// 검색 결과 화면에 표시
 
-searchForm.addEventListener("submit", async function(event) {
+function renderSuggestions(results) {
 
-    event.preventDefault();
+    currentSuggestions = results.slice(0, 5);
+
+    searchResults.innerHTML = "";
+    searchResults.hidden = false;
+
+    if (!currentSuggestions.length) {
+
+        searchResults.innerHTML =
+            '<p class="search-message">검색 결과가 없어요.</p>';
+
+        return;
+    }
+
+    currentSuggestions.forEach(place => {
+
+        const button = document.createElement("button");
+        const title = document.createElement("strong");
+        const detail = document.createElement("small");
+
+        button.type = "button";
+
+        title.textContent = place[0];
+        detail.textContent = place[1];
+
+        button.appendChild(title);
+        button.appendChild(detail);
+
+        button.addEventListener("click", function() {
+            selectPlace(place);
+        });
+
+        searchResults.appendChild(button);
+    });
+}
+
+// 실시간 추천 검색
+
+function updateSuggestions() {
+
+    clearTimeout(searchTimer);
+
+    const id = ++searchId;
 
     const keyword = cityInput.value.trim();
 
-    if (!keyword) return;
+    // 검색창이 비어 있으면 주요 도시 추천
 
-    const id = ++searchId;
+    if (!keyword) {
+
+        renderSuggestions(cityList.slice(0, 5));
+
+        return;
+    }
+
+    // 등록된 주요 도시에서 먼저 검색
+
+    const results = cityList.filter(place =>
+        matchesCity(place[0], keyword)
+    );
+
+    // 정확히 일치하는 도시 우선 표시
+
+    results.sort((a, b) => {
+
+        const score = name => {
+
+            if (name === keyword) return 3;
+            if (name.startsWith(keyword)) return 2;
+            if (getInitial(name).startsWith(keyword)) return 1;
+
+            return 0;
+        };
+
+        return score(b[0]) - score(a[0]);
+    });
+
+    if (results.length > 0) {
+
+        renderSuggestions(results);
+
+        return;
+    }
+
+    // 초성만 입력했을 때는 API 요청하지 않음
+
+    if (
+        /^[ㄱ-ㅎ]+$/.test(keyword) ||
+        keyword.length < 2
+    ) {
+
+        renderSuggestions([]);
+
+        return;
+    }
+
+    // 등록되지 않은 지역은 API로 추가 검색
+
+    currentSuggestions = [];
 
     searchResults.hidden = false;
 
     searchResults.innerHTML =
         '<p class="search-message">지역 검색 중...</p>';
 
-    const name = aliases[keyword] || keyword;
+    searchTimer = setTimeout(async function() {
 
-    const metro = metroAreas[keyword];
+        try {
 
-    const countryFilter = metro
-        ? "&countryCode=KR"
-        : "";
+            const url =
+                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(keyword)}&count=30&language=ko&format=json`;
 
-    const url =
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=50&language=ko&format=json${countryFilter}`;
+            const response = await fetch(url);
+            const data = await response.json();
 
-    try {
+            if (id !== searchId) return;
 
-        const response = await fetch(url);
-        const data = await response.json();
+            if (!response.ok) {
+                throw new Error("검색 실패");
+            }
 
-        if (id !== searchId) return;
+            // 작은 마을은 제외하고 주요 도시만 표시
 
-        if (!response.ok) {
-            throw new Error("지역 검색 실패");
-        }
+            const places = (data.results || [])
+                .filter(place => {
 
-        let results = data.results || [];
+                    const code = place.feature_code || "";
 
-        // 광역시 검색 시 같은 이름의 작은 마을 제외
-
-        if (metro) {
-
-            const matched = results.filter(place => {
-
-                const admin = place.admin1 || "";
-
-                return (
-                    place.country_code === "KR" &&
-                    admin.includes(metro)
+                    return [
+                        "PPLC",
+                        "PPLA",
+                        "PPLA2",
+                        "PPLA3",
+                        "ADM1",
+                        "ADM2"
+                    ].includes(code) ||
+                        (
+                            code === "PPL" &&
+                            (place.population || 0) >= 10000
+                        );
+                })
+                .sort((a, b) =>
+                    (b.population || 0) -
+                    (a.population || 0)
                 );
+
+            const seen = new Set();
+
+            const filtered = places.filter(place => {
+
+                const key = place.id ??
+                    `${place.latitude},${place.longitude}`;
+
+                if (seen.has(key)) return false;
+
+                seen.add(key);
+
+                return true;
             });
 
-            if (matched.length > 0) {
-                results = matched;
-            }
-        }
+            const suggestions = filtered.map(place => [
 
-        // 주요 도시 및 행정구역 우선
-
-        const majorCities = results.filter(place => {
-
-            const code = place.feature_code || "";
-
-            return [
-                "PPLC",
-                "PPLA",
-                "PPLA2",
-                "PPLA3",
-                "ADM1",
-                "ADM2"
-            ].includes(code) ||
-                (place.population || 0) >= 10000;
-        });
-
-        if (majorCities.length > 0) {
-            results = majorCities;
-        }
-
-        // 주요 도시 우선 정렬
-
-        results.sort((a, b) => {
-
-            const aExact =
-                a.name === keyword ? 1 : 0;
-
-            const bExact =
-                b.name === keyword ? 1 : 0;
-
-            if (aExact !== bExact) {
-                return bExact - aExact;
-            }
-
-            return (b.population || 0) -
-                (a.population || 0);
-        });
-
-        // 중복 지역 제거
-
-        const seen = new Set();
-
-        results = results.filter(place => {
-
-            const key = [
                 place.name,
-                place.admin1,
-                place.country
-            ].join("|");
 
-            if (seen.has(key)) return false;
+                [...new Set([
+                    place.admin2,
+                    place.admin1,
+                    place.country
+                ].filter(value =>
+                    value && value !== place.name
+                ))].join(", "),
 
-            seen.add(key);
+                place.latitude,
+                place.longitude
+            ]);
 
-            return true;
-        });
+            renderSuggestions(suggestions);
 
-        // 광역시가 명확하면 바로 선택
+        } catch (error) {
 
-        if (metro) {
+            if (id !== searchId) return;
 
-            const exactMetro = results.find(place => {
-
-                const code = place.feature_code || "";
-
-                const admin = place.admin1 || "";
-
-                return (
-                    place.country_code === "KR" &&
-                    admin.includes(metro) &&
-                    (
-                        code === "PPLC" ||
-                        code === "PPLA" ||
-                        code === "ADM1"
-                    )
-                );
-            });
-
-            if (exactMetro) {
-
-                selectPlace(exactMetro);
-
-                return;
-            }
-        }
-
-        // 최대 5개 표시
-
-        results = results.slice(0, 5);
-
-        searchResults.innerHTML = "";
-
-        if (results.length === 0) {
+            console.error(error);
 
             searchResults.innerHTML =
-                '<p class="search-message">검색 결과가 없어요. 다른 이름으로 검색해 보세요.</p>';
-
-            return;
+                '<p class="search-message">검색에 실패했어요.</p>';
         }
 
-        // 결과가 하나면 바로 조회
+    }, 350);
+}
 
-        if (results.length === 1) {
+// 입력하는 순간 자동완성
 
-            selectPlace(results[0]);
+cityInput.addEventListener("input", updateSuggestions);
 
-            return;
-        }
+// 한글 입력 완료 시 추천 갱신
 
-        // 여러 결과가 있을 경우 직접 선택
+cityInput.addEventListener(
+    "compositionend",
+    updateSuggestions
+);
 
-        results.forEach(place => {
+// 검색창 클릭 시 추천 지역 표시
 
-            const button = document.createElement("button");
+cityInput.addEventListener("focus", updateSuggestions);
 
-            const title = document.createElement("strong");
+// 엔터 또는 검색 버튼 클릭 시 첫 번째 결과 조회
 
-            const detail = document.createElement("small");
+searchForm.addEventListener("submit", function(event) {
 
-            button.type = "button";
+    event.preventDefault();
 
-            title.textContent = place.name;
+    if (!cityInput.value.trim()) return;
 
-            detail.textContent = [
-                place.admin1 === place.name
-                    ? null : place.admin1,
-                place.country
-            ].filter(Boolean).join(", ");
+    if (currentSuggestions.length > 0) {
 
-            button.appendChild(title);
-            button.appendChild(detail);
+        selectPlace(currentSuggestions[0]);
 
-            button.addEventListener("click", function() {
+    } else {
 
-                selectPlace(place);
-            });
-
-            searchResults.appendChild(button);
-        });
-
-    } catch (error) {
-
-        if (id !== searchId) return;
-
-        console.error(error);
-
-        searchResults.innerHTML =
-            '<p class="search-message">검색에 실패했어요. 다시 시도해 주세요.</p>';
+        updateSuggestions();
     }
-});
-
-// 검색어 변경 시 이전 검색 결과 닫기
-
-cityInput.addEventListener("input", function() {
-
-    searchId++;
-
-    searchResults.hidden = true;
 });
 
 // 검색창 바깥 클릭 시 닫기
@@ -935,23 +1034,30 @@ document.addEventListener("click", function(event) {
 
     if (!event.target.closest(".search-wrap")) {
 
+        clearTimeout(searchTimer);
+
         searchId++;
 
         searchResults.hidden = true;
+        currentSuggestions = [];
     }
 });
 
-// ESC 키로 검색창 닫기
+// ESC 키로 검색 결과 닫기
 
 document.addEventListener("keydown", function(event) {
 
     if (event.key === "Escape") {
 
+        clearTimeout(searchTimer);
+
         searchId++;
 
         searchResults.hidden = true;
+        currentSuggestions = [];
     }
 });
+
 
 // 날씨 API 요청
 

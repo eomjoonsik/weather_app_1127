@@ -661,3 +661,23 @@ button:disabled {
     }
 
 }
+
+
+.hero {
+    overflow: visible;
+    z-index: 2;
+}
+
+.search-results {
+    max-height: none;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.search-results button {
+    transition: background 0.15s;
+}
+
+.search-results button:hover {
+    background: #EDF2F7;
+}
