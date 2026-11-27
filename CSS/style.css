@@ -682,7 +682,13 @@ button:disabled {
     background: #EDF2F7;
 }
 
-/* 모바일 검색창 자동 확대 방지 */
+/* 모바일 검색창 자동 확대 방지 이중 */
 #cityInput {
     font-size: 16px;
 }
+
+#cityInput {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
+}
+
