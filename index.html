@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/style.css">
+    <title>weather.</title>
+</head>
+<body>
+
+    <main class="wrap">
+
+        <section class="hero" id="hero">
+
+            <div id="weatherAnimation" aria-hidden="true"></div>
+
+            <header class="header">
+                <h1>weather.</h1>
+
+                <button id="locationBtn"
+                    title="현재 위치로 돌아가기"
+                    aria-label="현재 위치로 돌아가기">
+
+                    <svg width="24" height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7">
+
+                        <circle cx="12" cy="12" r="7"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <path d="M12 2v3 M12 19v3 M2 12h3 M19 12h3"/>
+
+                    </svg>
+
+                </button>
+            </header>
+
+            <!-- 지역 검색 -->
+            <div class="search-wrap">
+
+                <form id="searchForm">
+                    <input type="search"
+                        id="cityInput"
+                        placeholder="지역 이름을 검색하세요"
+                        autocomplete="off"
+                        aria-label="지역 이름">
+
+                    <button type="submit">검색</button>
+                </form>
+
+                <div id="searchResults"
+                    class="search-results" hidden>
+                </div>
+
+            </div>
+
+            <!-- 현재 날씨 -->
+            <div class="location">
+                <p id="city">현재 위치 확인 중</p>
+                <p id="date"></p>
+            </div>
+
+            <div class="main-weather">
+
+                <h2 id="temp">--°</h2>
+                <p id="weatherText">날씨 불러오는 중</p>
+                <p id="feelsLike"></p>
+
+                <div class="temperature-range">
+                    <span>최고 <b id="maxTemp">--°</b></span>
+                    <span>최저 <b id="minTemp">--°</b></span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="content">
+
+            <!-- 오늘의 외출 팁 -->
+            <section class="tip">
+
+                <div class="section-label">BEFORE YOU GO</div>
+
+                <h3>오늘의 외출 팁</h3>
+
+                <h2 id="tipTitle">날씨를 확인하고 있어요.</h2>
+
+                <p id="tipText"></p>
+
+                <div id="tipItems" class="tip-items"></div>
+
+            </section>
+
+            <!-- 시간별 날씨 -->
+            <section class="hourly-section">
+
+                <div class="section-header">
+                    <h3>시간별 날씨</h3>
+                    <span id="rainChance"></span>
+                </div>
+
+                <div class="hourly-scroll">
+                    <div id="hourly" class="hourly"></div>
+                    <div id="graph"></div>
+                </div>
+
+            </section>
+
+            <!-- 상세 날씨 -->
+            <section class="detail-section">
+
+                <h3>상세 날씨</h3>
+
+                <div class="info">
+
+                    <div class="item">
+                        <p>습도</p>
+                        <h2 id="humidity">--</h2>
+                        <small id="humidityText"></small>
+                    </div>
+
+                    <div class="item">
+                        <p>강수량</p>
+                        <h2 id="rain">--</h2>
+                        <small id="rainText"></small>
+                    </div>
+
+                    <div class="item">
+                        <p>풍속</p>
+                        <h2 id="wind">--</h2>
+                        <small id="windText"></small>
+                    </div>
+
+                    <div class="item">
+                        <p>UV 지수</p>
+                        <h2 id="uv">--</h2>
+                        <small id="uvText"></small>
+                    </div>
+
+                    <div class="item">
+                        <p>기압</p>
+                        <h2 id="pressure">--</h2>
+                        <small>지표면 기압</small>
+                    </div>
+
+                    <div class="item">
+                        <p>적설 깊이</p>
+                        <h2 id="snow">--</h2>
+                        <small id="snowText"></small>
+                    </div>
+
+                    <div class="item">
+                        <p>가시거리</p>
+                        <h2 id="visibility">--</h2>
+                        <small id="visibilityText"></small>
+                    </div>
+
+                    <div class="item">
+                        <p>파도 높이</p>
+                        <h2 id="wave">--</h2>
+                        <small id="waveText">인근 해역 기준</small>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <footer>
+                <p id="updated"></p>
+                <button id="refreshBtn">날씨 업데이트 ↻</button>
+                <p>Weather data by Open-Meteo</p>
+            </footer>
+
+        </div>
+
+    </main>
+
+    <script src="JS/main.js"></script>
+
+</body>
+</html>
